@@ -1,25 +1,78 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Modal from './components/Modal/Modal';
+import Button from './components/Button/Button';
+import TaskList from './components/TaskList/TaskList';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [show, setShow] = useState(false);
+    const [newTask, setNewTask] = useState('');
+    const [tasks, setTasks] = useState([
+        {
+            id: 1,
+            task: 'Coding',
+            completed: false
+        },
+        {
+            id: 2,
+            task: 'Eat',
+            completed: false
+        },
+        {
+            id: 3,
+            task: 'Sleep',
+            completed: false
+        },
+        {
+            id: 4,
+            task: 'Study',
+            completed: false
+        }
+    ]);
+
+    const handleShow = () => setShow(!show);
+
+    const handleChangeCheck = (event) => {
+        setNewTask(event.target.value);
+    };
+
+    const handleAddTask = () => {
+        setTasks((prevState) => [
+            ...prevState,
+            {
+                id: Math.floor(Math.random  * 100),
+                task: newTask,
+                completed: false
+            }
+        ]);
+        handleShow();
+    };
+
+    const handleDelete = (id) => {
+        setTasks((prevState) => prevState.filter((task) => task.id !== id));
+    };
+
+    return (
+        <div className="App">
+            {show && (
+                <Modal
+                    handleChangeCheck={handleChangeCheck}
+                    handleAdd={handleAddTask}
+                    handleShow={handleShow}
+                />
+            )}
+
+            <Button handleClick={handleShow}>Открыть модалку</Button>
+
+            {/* task list */}
+            <TaskList handleDelete={handleDelete} list={tasks} />
+        </div>
+    );
 }
 
 export default App;
+
+
+
+
+
